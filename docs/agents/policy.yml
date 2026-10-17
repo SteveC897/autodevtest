@@ -1,0 +1,51 @@
+# docs/agents/policy.yml
+# 由 scripts/、night-shift.ps1、AGENTS.md 共同引用。改这里 = 改流水线行为。
+
+risk:
+  # 命中任意一条 → 直接 T3（只给人，agent 最多到 draft/分支）
+  protected_paths:
+    - ".github/workflows/**"
+    - "**/.env*"
+    - "**/*.pem"
+    - "pyproject.toml"        # 依赖变更单独走人工
+    - "uv.lock"
+  # 命中任意一条 → 至少 T2
+  escalate:
+    - "src/vsproto/config.py"   # 手感参数：用户可见行为
+    - "src/vsproto/app.py"      # 输入与主循环
+    - "scripts/verify.py"       # 验证闸门本身，改它等于改裁判
+
+  # 允许自动合并的级别。保持空，直到积累 4 周数据（revert < 2%）。
+  auto_merge_tiers: []
+
+budget:
+  task_wall_minutes: 30
+  max_diff_lines: 200
+  max_diff_files: 8
+  max_merges_per_night: 10
+  max_parallel: 2
+  verifiers:                  # 每个风险级别要几个独立 verdict
+    T0: 1
+    T1: 2
+    T2: 3
+    T3: 999                   # 实际由人处理
+
+scout:
+  signals: [todo, flaky, lock, layout]
+  max_items_per_run: 10
+
+merge:
+  stop_file: docs/agents/STOP
+  squash: true
+  delete_branch: true
+  rebase_before_merge: true
+  smoke_command: "uv run pytest -q"
+  # 本机没有 gh CLI：PR 由人创建，脚本只负责分支、证据与判定
+  tooling_note: "gh not installed; PR creation is manual"
+
+night:
+  queue_file: docs/agents/queue.md
+  report_dir: docs/agents/nightly
+  journal_dir: docs/agents/journal
+  log_dir: logs
+  stop_on_first_blocker: false

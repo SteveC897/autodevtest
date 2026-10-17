@@ -11,10 +11,24 @@
 | 单元测试 | `uv run pytest` |
 | 无头验证 | `uv run python scripts/verify.py` |
 | 语法检查 | `uv run python -m compileall -q src` |
+| 侦察（写 backlog） | `uv run python scripts/scout.py` |
+| 规格检查（G1） | `uv run python scripts/spec_lint.py` |
+| 技能自检 | `uv run python scripts/check_skills.py` |
+| 夜班干跑 | `powershell -NoProfile -File scripts/night-shift.ps1 -DryRun` |
 
 ## 1. 这是什么
 
 3 分钟一局的 Vampire Survivors 超小原型。它的用途是**验证"规格 → 实现 → 验证"这条流水线**，不是做成完整游戏。因此：范围小、可验证、不追求好玩。
+
+| 阶段 | skill | 产出 |
+|---|---|---|
+| 发现 | `goal-scout` | `docs/agents/backlog/*.md` |
+| 规划 | `spec-writer` | `docs/agents/specs/*.md` |
+| 实现 | `build-tdd` | 分支 + `evidence.json` |
+| 验证 | `verify-game` / `verify-diff` | 截图 + 结构化 verdict |
+| 回灌 | `harden` | 检查项 / 测试 / 规则 |
+
+一次只做一个 spec。方法论、通用模板与其他仓库的装法在 `docs/dsh/`。
 
 ## 2. 分层（改代码前必须知道）
 

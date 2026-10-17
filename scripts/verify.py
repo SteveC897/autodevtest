@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import time
 from dataclasses import replace
@@ -93,6 +94,12 @@ def main() -> int:
 
     hp_px = rgb(surface, (30, 28))
     check("血条已绘制", hp_px == render.HP_FILL, str(hp_px))
+
+    world_src = (ROOT / "src" / "vsproto" / "world.py").read_text(encoding="utf-8")
+    check(
+        "world.py 不依赖 pygame（分层禁令）",
+        not re.search(r"(?m)^\s*(?:import|from)\s+pygame\b", world_src),
+    )
 
     player_px = rgb(surface, (cfg.view_w // 2, cfg.view_h // 2))
     check("主角是浅红菱形", player_px == render.PLAYER_FILL, str(player_px))

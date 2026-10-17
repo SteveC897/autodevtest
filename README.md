@@ -46,13 +46,22 @@ uv run python scripts/verify.py   # 无头启动 + 截图 + 像素级断言 + JS
 
 这个仓库是「DSH 自动开发流水线」的第一个真实样本：
 
+| 阶段 | 入口 | 作用 |
+|---|---|---|
+| 发现 | `uv run python scripts/scout.py` | 扫仓库写 backlog（只记录不修） |
+| 规划 | `.dsh/skills/spec-writer` + `scripts/spec_lint.py` | 写可验收的 spec，过 G1 |
+| 实现 | `.dsh/skills/build-tdd` | 先红后绿，收证据，不合并 |
+| 验证 | `scripts/verify.py` + `.dsh/skills/verify-game` | 无头跑、截图、像素断言 |
+| 审计 | `.dsh/skills/verify-diff` | 只看 diff 的独立 verdict |
+| 回灌 | `.dsh/skills/harden` | 事故 → 规则 |
+| 夜间 | `scripts/night-shift.ps1` | 编排；默认干跑、默认不合并 |
+
 | 文件 | 作用 |
 |---|---|
 | `AGENTS.md` | 仓库宪法：分层禁令、完成定义、已知设计决定 |
-| `docs/agents/specs/sp-20261017-001.md` | 本次的规格与验收标准 |
-| `docs/agents/journal/2026-10-17.md` | 交付记录与关键决定 |
-| `docs/agents/backlog/2026-10-17.md` | 后续工作（只记录不修） |
-| `.dsh/skills/verify-game/SKILL.md` | 验证技能：怎么跑、验什么、怎么加检查 |
+| `docs/agents/policy.yml` | 风险分级、路径保护、预算 |
+| `docs/agents/specs/sp-20261017-001.md` | 首次交付的规格与验收标准 |
+| `docs/dsh/` | 方法论主文档 + 通用模板 + 安装说明 |
 
 流程：`backlog → spec(G1) → build(G2) → verify(G3) → 人合并`。当前处于"人合并"阶段，没有开启自动合并。
 
