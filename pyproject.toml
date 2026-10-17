@@ -1,0 +1,25 @@
+[project]
+name = "vsproto"
+version = "0.1.0"
+description = "Vampire Survivors 超小原型（pygame）：3 分钟、自动索敌、无升级、无回血"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["pygame-ce>=2.5.0"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+vsproto = "vsproto.app:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vsproto"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["src"]
